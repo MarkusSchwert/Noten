@@ -17,6 +17,8 @@ public class Mark {
 	public static void printList(){
 		for(Mark entry: NOTENLISTE){
 			System.out.println("" + entry.getVlname());
+			System.out.println("" + entry.getVlmark());
+			System.out.println("" + entry.getVlects());
 		}
 	}
 
@@ -34,6 +36,7 @@ public class Mark {
 				sumEctsTimesMark += entry.getVlmark() * entry.getVlects();
 			}
 		}
+		System.out.println(sumEcts + " " + sumEctsTimesMark);
 		result = sumEctsTimesMark / sumEcts;
 		return result;
 	}

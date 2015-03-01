@@ -14,57 +14,73 @@ public class MarkGui extends JFrame {
 	public JLabel lblname, lblects, lblmark, lblweight, lblaverage;
 	public JTextField name, ects, mark;
 	public JCheckBox weight;
-	public JButton btnAdd;
+	public JButton btnAdd, btnDelete;
 	public String average;
-	
 
 	private class MyActionListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			double chmark = 0;
-			int chects = 0;
-			String chname = "";
-			boolean chweight;
-			Mark inputValidator = new Mark();
-			inputValidator.validateInput();
-			
-			chweight = weight.isSelected();
-			
-			if(!mark.getText().isEmpty()){
-				try {
-					chmark = (double)Double.parseDouble(mark.getText());
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "Geben Sie eine Zahl als Note ein", "ERROR", JOptionPane.ERROR_MESSAGE);
+			if (e.getSource() == btnAdd) {
+				double chmark = 0;
+				int chects = 0;
+				String chname = "";
+				boolean chweight;
+				boolean inputTest = true;
+				chweight = weight.isSelected();
+
+				if (!mark.getText().isEmpty()) {
+					try {
+						chmark = (double) Double.parseDouble(mark.getText());
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(null,
+								"Geben Sie eine Zahl als Note ein", "ERROR",
+								JOptionPane.ERROR_MESSAGE);
+						inputTest = false;
+					}
+				} else {
+					JOptionPane.showMessageDialog(null,
+							"Geben Sie eine Note ein", "ERROR",
+							JOptionPane.ERROR_MESSAGE);
+					inputTest = false;
+				}
+
+				if (!ects.getText().isEmpty()) {
+					try {
+						chects = (int) Integer.parseInt(ects.getText());
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(null,
+								"Das ist keine Zahl", "ERROR",
+								JOptionPane.ERROR_MESSAGE);
+						inputTest = false;
+					}
+				} else {
+					JOptionPane.showMessageDialog(null,
+							"Geben Sie einen Zahlenwert bei Ects ein", "ERROR",
+							JOptionPane.ERROR_MESSAGE);
+					inputTest = false;
+				}
+
+				if (name.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null,
+							"Geben Sie einen Veranstaltungsnamen ein", "ERROR",
+							JOptionPane.ERROR_MESSAGE);
+					inputTest = false;
+				} else {
+					chname = name.getText();
+				}
+				if (inputTest) {
+					Mark newEntry = new Mark(chmark, chects, chname, chweight);
+					Mark.NOTENLISTE.add(newEntry);
+					average = "" + Mark.comuteMark();
+					System.out.println(average);
+					lblaverage.setText(average);
+					Mark.printList();
 				}
 			}
-			else{
-				JOptionPane.showMessageDialog(null, "Geben Sie eine Note ein", "ERROR", JOptionPane.ERROR_MESSAGE);
+			if(e.getSource() == btnDelete){
+				Mark.NOTENLISTE.clear();
 			}
-			
-			if(!ects.getText().isEmpty()){
-				try {
-					chmark = (int)Integer.parseInt(ects.getText());
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "Das ist keine Zahl", "ERROR", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-			else{
-				JOptionPane.showMessageDialog(null, "Geben Sie einen Zahlenwert ein", "ERROR", JOptionPane.ERROR_MESSAGE);
-			}
-			
-			if(name.getText().isEmpty()){
-				JOptionPane.showMessageDialog(null, "Geben Sie einen Veranstaltungsnamen ein", "ERROR", JOptionPane.ERROR_MESSAGE);
-			}
-			else{
-				chname = name.getText();
-			}
-			
-			Mark newEntry = new Mark(chmark, chects, chname, chweight);
-			Mark.NOTENLISTE.add(newEntry);
-			average = "" + Mark.comuteMark();
-			lblaverage.setText(average);
-			Mark.printList();
 		}
 
 	}
@@ -109,9 +125,14 @@ public class MarkGui extends JFrame {
 		add(weight);
 
 		btnAdd = new JButton("Hinzufügen");
-		btnAdd.setBounds(10, 220, 150, 20);
+		btnAdd.setBounds(10, 220, 100, 20);
 		btnAdd.addActionListener(new MyActionListener());
 		add(btnAdd);
+
+		btnDelete = new JButton("Liste löschen");
+		btnDelete.setBounds(120, 220, 120, 20);
+		btnDelete.addActionListener(new MyActionListener());
+		add(btnDelete);
 
 		lblaverage = new JLabel(average);
 		lblaverage.setBounds(400, 180, 50, 50);
